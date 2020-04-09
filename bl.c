@@ -1,6 +1,6 @@
 /*
  * blueprint language -- this is a primitive language for creating drawings
- * v0.1
+ * v0.2
  * 09.04.2020
  * by Nifra -- ASZ
  */
@@ -14,7 +14,7 @@
 int brush = '#';
 
 int main(int argc, char *argv[]) {
-	FILE *src = fopen("test.bl", "r");
+	FILE *src = fopen(argv[1], "r");
 	char form_buf[256], *form = form_buf;
 	int c = 0;
 
@@ -51,13 +51,15 @@ int main(int argc, char *argv[]) {
 }
 
 void interpret(char *form) {
-	char *funcs_names[] = {"reta", "rect", "point", "slant", "brush", "sym"};
-	void (*funcs[])(char*) = {reta, rect, point, slant, set_brush, sym};
+	char *funcs_names[] = {"reta", "rect", "point", "slant", "brush", "sym", "~"};
+	void (*funcs[])(char*) = {reta, rect, point, slant, set_brush, sym, comment};
 
 	char *head = strtok(form, ":");	
 	char *tail = strtok(NULL, "/");
 
-	for (int i = 0; i < 6; i++)
+	int i = 0;
+
+	for (; i < 7; i++)
 		if (!strcmp(funcs_names[i], head)) (*funcs[i])(tail);
 }
 
@@ -131,3 +133,5 @@ void set_brush(char *arg) {
 void sym(char *arg) {
 	brush = *arg;
 }
+
+void comment(char *arg) { ; }

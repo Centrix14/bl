@@ -11,6 +11,7 @@ void reta(char*),
 	 point(char*),
 	 slant(char*),
 	 set_brush(char*),
-	 sym(char*);
+	 sym(char*),
+	 comment(char*);
 
 #endif

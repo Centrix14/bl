@@ -1,13 +1,14 @@
 /*
  * blueprint language -- this is a primitive language for creating drawings
- * v0.2
- * 09.04.2020
+ * v0.3
+ * 10.04.2020
  * by Nifra -- ASZ
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "coniox/coniox.h"
 #include "proto.h"
 
@@ -51,8 +52,8 @@ int main(int argc, char *argv[]) {
 }
 
 void interpret(char *form) {
-	char *funcs_names[] = {"reta", "rect", "point", "slant", "brush", "sym", "~"};
-	void (*funcs[])(char*) = {reta, rect, point, slant, set_brush, sym, comment};
+	char *funcs_names[] = {"reta", "rect", "point", "line", "brush", "sym", "~"};
+	void (*funcs[])(char*) = {reta, rect, point, line, set_brush, sym, comment};
 
 	char *head = strtok(form, ":");	
 	char *tail = strtok(NULL, "/");
@@ -94,18 +95,21 @@ void point(char *arg) {
 	putchar(brush);
 }
 
-void slant(char *arg) {
+void line(char *arg) {
 	char *coord1 = strtok(arg, "|");	
 	char *coord2 = strtok(NULL, "|");
 
-	int x1 = atoi(strtok(coord1, ";")), y1 = atoi(strtok(NULL, ";"));	
-	int x2 = atoi(strtok(coord2, ";")), y2 = atoi(strtok(NULL, ";"));
+	double x1 = atof(strtok(coord1, ";")), y1 = atof(strtok(NULL, ";"));	
+	double x2 = atof(strtok(coord2, ";")), y2 = atof(strtok(NULL, ";"));
+	double lenght = sqrt(pow(x2-x1, 2) + pow(y2-y1, 2));
+	double d_x = (x2-x1)/(lenght), d_y = (y2-y1)/(lenght);
 
-	while (x1*y1 < x2*y2) {
+	while (x1 < x2 && y1 < y2) {
 		mvCursor(x1, y1);
 		putchar(brush);
-		x1++; y1++;
-	}	
+
+		x1 += d_x; y1 += d_y;
+	}
 }
 
 int transform_color(char *color) {

@@ -1,6 +1,6 @@
 /*
  * blueprint language -- this is a primitive language for creating drawings
- * v0.3
+ * v0.4
  * 10.04.2020
  * by Nifra -- ASZ
  */
@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 #include "coniox/coniox.h"
 #include "proto.h"
 
@@ -52,16 +53,21 @@ int main(int argc, char *argv[]) {
 }
 
 void interpret(char *form) {
-	char *funcs_names[] = {"reta", "rect", "point", "line", "brush", "sym", "~"};
-	void (*funcs[])(char*) = {reta, rect, point, line, set_brush, sym, comment};
+	char *funcs_names[] = {"reta", "rect", "point", "line", "brush", "sym", "~", "sleep"};
+	void (*funcs[])(char*) = {reta, rect, point, line, set_brush, sym, comment, sleep};
 
 	char *head = strtok(form, ":");	
 	char *tail = strtok(NULL, "/");
 
 	int i = 0;
 
-	for (; i < 7; i++)
-		if (!strcmp(funcs_names[i], head)) (*funcs[i])(tail);
+	for (; i < 8; i++) {
+		if (!strcmp(funcs_names[i], head)){
+			(*funcs[i])(tail);
+			return ;
+		}
+	}
+	if (strlen(head) > 1) puts(head);
 }
 
 void reta(char *arg) {
@@ -139,3 +145,11 @@ void sym(char *arg) {
 }
 
 void comment(char *arg) { ; }
+
+void sleep(char *arg) {
+	time_t start = time(NULL);
+	char *sleep_time_str = strtok(arg, ";");
+	int sleep_time = atoi(sleep_time_str);
+
+	while ((time(NULL) - start) < sleep_time) ;
+}

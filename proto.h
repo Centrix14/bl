@@ -9,7 +9,7 @@ void interpret(char*);
 void reta(char*),
 	 rect(char*),
 	 point(char*),
-	 slant(char*),
+	 line(char*),
 	 set_brush(char*),
 	 sym(char*),
 	 comment(char*);

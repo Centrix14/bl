@@ -12,6 +12,7 @@ void reta(char*),
 	 line(char*),
 	 set_brush(char*),
 	 sym(char*),
-	 comment(char*);
+	 comment(char*),
+	 sleep(char*);
 
 #endif

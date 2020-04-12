@@ -1,0 +1,13 @@
+~:drawing a rect and lines/
+rect:10;10|50;50/
+line:10;10|60;60/
+line:60;10|10;60/
+
+~:drawing a text/
+reta:10;70|bl simple example/
+
+~:drawing a circles/
+circle:10;10|10/
+circle:60;60|10/
+circle:60;10|10/
+circle:10;60|10/

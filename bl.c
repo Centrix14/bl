@@ -53,15 +53,15 @@ int main(int argc, char *argv[]) {
 }
 
 void interpret(char *form) {
-	char *funcs_names[] = {"reta", "rect", "point", "line", "brush", "sym", "~", "sleep"};
-	void (*funcs[])(char*) = {reta, rect, point, line, set_brush, sym, comment, sleep};
+	char *funcs_names[] = {"reta", "rect", "point", "line", "brush", "sym", "~", "sleep", "circle"};
+	void (*funcs[])(char*) = {reta, rect, point, line, set_brush, sym, comment, sleep, circle};
 
 	char *head = strtok(form, ":");	
 	char *tail = strtok(NULL, "/");
 
 	int i = 0;
 
-	for (; i < 8; i++) {
+	for (; i < 9; i++) {
 		if (!strcmp(funcs_names[i], head)){
 			(*funcs[i])(tail);
 			return ;
@@ -152,4 +152,86 @@ void sleep(char *arg) {
 	int sleep_time = atoi(sleep_time_str);
 
 	while ((time(NULL) - start) < sleep_time) ;
+}
+
+void circle(char *arg) {
+	char *coord = strtok(arg, "|");
+	char *sizes = strtok(NULL, "|");
+
+	int x = atoi(strtok(coord, ";")), y = atoi(strtok(NULL, ";"));
+	int width = atoi(sizes);
+	double r = width / 2.0;
+
+	mvCursor(x, y);
+
+//	printf("x: %d ; y: %d ; r: %g\n", x, y, r);
+
+	if (width == 1) {
+		putchar(brush);
+		return;
+	}
+	
+	int point[(int)floor(r)];
+	int line = 0, column = 0, is_brush = 0;
+	int X, Y;
+	double state;
+	double S = 0;
+	double xt_start, yt_start, xt_end, yt_end, k = 0.5;
+
+	for (line = 0; line < ceil(r); line++) {
+		state = ceil(r - r * sin(M_PI_4)) <= line;
+		yt_start = line + 1;
+		xt_start = 2*r-(sqrt(pow(r,2)-pow(yt_start-(r),2))+(r));
+		for (int i = 0; i < r; i++) {
+			xt_end = floor(xt_start)+1;
+			yt_end = 2*r-(sqrt(pow(r,2)-pow(xt_end-(r),2))+(r));
+			/*printf(" $ %g $ ", xt_end);*/
+			if (ceil(yt_start) - yt_end > 1) {
+				yt_end = ceil(yt_start) - 1;
+				xt_end = 2*r-(sqrt(pow(r,2)-pow(yt_end-(r),2))+(r));
+			}
+
+			if (ceil(xt_end)-xt_end > 0 && ceil(yt_start)-yt_start > 0) {
+				S = 1 - (xt_end-ceil(xt_end)+1)*(yt_start-ceil(yt_start)+1) / 2;
+			} else if (state) {
+				S = (yt_start-yt_end)*(ceil(xt_end)-xt_end+floor(xt_start)+1-xt_start) / 2;
+			} else {
+				S = (xt_end-xt_start)*(ceil(yt_start)-yt_start+floor(yt_end)+1-yt_end) / 2;
+			}
+
+//			printf("line: %d_%g_%g ; xt_start: %g ; yt_start: %g\t/\txt_end: %g ; yt_end: %g\n", line, state, S, xt_start, yt_start, xt_end, yt_end);
+
+			if (S >= k || yt_start == line) {
+				X = floor(xt_start);
+				break;
+			}
+
+			xt_start = xt_end;
+			yt_start = yt_end;
+			
+			if (yt_start == line) {
+				X = ceil(xt_start);
+				break;
+			}
+		}
+		Y = line;
+	
+		mvCursor(x + X + 1, y + Y + 1);
+
+		for (int k = 0; k < width - 2*X; k++)
+			putchar(brush);
+		
+		if (line != floor(r)+1)
+			point[line] = X;
+	}
+
+	line--;
+	if (width % 2 == 1) 
+		line--;
+	for (int i = 0; line >= 0; line--, i++) {
+//		printf("line: %d ; %d ; %d ; %d ; %d\n", line, x + point[line] + 1, y + (int)ceil(r) + i + 1, width - 2*point[line], point[line]);
+		mvCursor(x + point[line] + 1, y + ceil(r) + i + 1);
+		for (int k = 0; k < width - 2*point[line]; k++)
+			putchar(brush);
+	}
 }

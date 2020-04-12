@@ -13,6 +13,7 @@ void reta(char*),
 	 set_brush(char*),
 	 sym(char*),
 	 comment(char*),
-	 sleep(char*);
+	 sleep(char*),
+	 circle(char*);
 
 #endif

@@ -17,4 +17,9 @@ void reta(char*, cairo_t*),
 	 sleep(char*, cairo_t*),
 	 circle(char*, cairo_t*);
 
+double uni_get(char*);
+double uni_set(char*, double);
+
+void ppm_apply_click(GtkWidget *bttn, GtkWidget *entry);
+
 #endif

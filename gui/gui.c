@@ -6,20 +6,17 @@
  */
 
 #include <gtk/gtk.h>
+#include <stdlib.h>
 #include "proto.h"
 #include "draw.h"
 
 gboolean draw_callback(GtkWidget*, cairo_t*, char*);
-
-double bg_red = 0, bg_green = 0, bg_blue = 0;
-double fg_red = 0, fg_green = 0.5, fg_blue = 1;
-
-double thick = 2;
+void cust_bttn_click(GtkWidget*, gpointer);
 
 int main(int argc, char *argv[]) {
 	GtkWidget *window;	
 	GtkWidget *main_box;
-	GtkWidget *draw_area, *test_label;
+	GtkWidget *draw_area, *cust_bttn;
 
 	cairo_t *cr;
 
@@ -41,11 +38,12 @@ int main(int argc, char *argv[]) {
 	g_signal_connect (G_OBJECT(draw_area), "draw",
                     G_CALLBACK(draw_callback), argv[1]);
 
-	// init test label
-	test_label = gtk_label_new("test_label");
+	// init customization bttn
+	cust_bttn = gtk_button_new_with_label("cust");
+	g_signal_connect(G_OBJECT(cust_bttn), "clicked", G_CALLBACK(cust_bttn_click), NULL);
 
 	// pack main_box
-	gtk_box_pack_start(GTK_BOX(main_box), test_label, TRUE, FALSE, 5);
+	gtk_box_pack_start(GTK_BOX(main_box), cust_bttn, FALSE, FALSE, 5);
 	gtk_box_pack_start(GTK_BOX(main_box), draw_area, TRUE, TRUE, 0);
 
 	gtk_container_add(GTK_CONTAINER(window), main_box);
@@ -61,17 +59,22 @@ gboolean draw_callback(GtkWidget *widget, cairo_t *cr, char *file_name) {
 	guint width, height;
 	int c = 0;
 
+	if (!src) {
+		fprintf(stderr, "gbl: gbl <script-name\n>");
+		exit(0);
+	}
+
 	width = gtk_widget_get_allocated_width(widget);
 	height = gtk_widget_get_allocated_height(widget);
 
-	cairo_set_source_rgb(cr, bg_red, bg_green, bg_blue);
+	cairo_set_source_rgb(cr, uni_get("br"), uni_get("bg"), uni_get("bb"));
 	cairo_paint(cr);
 
 	// drawing grid
 	draw_grid(cr, width, height, mm_to_pix(5));
 	
-	cairo_set_source_rgb(cr, fg_red, fg_green, fg_blue);
-	cairo_set_line_width(cr, thick);
+	cairo_set_source_rgb(cr, uni_get("fr"), uni_get("fg"), uni_get("fb"));
+	cairo_set_line_width(cr, uni_get("th"));
 
 	while (!feof(src)) {
 		form = form_buf;	
@@ -95,4 +98,30 @@ gboolean draw_callback(GtkWidget *widget, cairo_t *cr, char *file_name) {
 
 	fclose(src);
 	return FALSE;
+}
+
+void cust_bttn_click(GtkWidget *bttn, gpointer data) {
+	GtkWidget *cust_dialog, *dialog_content;
+	GtkWidget *ppm_entry, *ppm_apply_bttn;
+	GtkWidget *dialog_box, *ppm_box;
+
+	cust_dialog = gtk_dialog_new_with_buttons("Customization", NULL, (GtkDialogFlags)NULL, NULL);
+	dialog_content = gtk_dialog_get_content_area(GTK_DIALOG(cust_dialog));
+
+	// init ppm row
+	ppm_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
+	ppm_entry = gtk_entry_new();
+	ppm_apply_bttn = gtk_button_new_with_label("apply");
+	g_signal_connect(G_OBJECT(ppm_apply_bttn), "clicked", G_CALLBACK(ppm_apply_click), ppm_entry);
+
+	// pack ppm row
+	gtk_box_pack_start(GTK_BOX(ppm_box), ppm_entry, TRUE, TRUE, 5);
+	gtk_box_pack_start(GTK_BOX(ppm_box), ppm_apply_bttn, FALSE, FALSE, 5);
+
+	// pack dialog box
+	dialog_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
+	gtk_box_pack_start(GTK_BOX(dialog_box), ppm_box, TRUE, FALSE, 5);
+
+	gtk_container_add(GTK_CONTAINER(dialog_content), dialog_box);
+	gtk_widget_show_all(cust_dialog);
 }

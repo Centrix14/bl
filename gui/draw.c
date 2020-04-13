@@ -1,12 +1,8 @@
 #include <gtk/gtk.h>
-
-double PIX_PER_MM = 5;
-double grid_fg_red = 0.2, grid_fg_green = 0.2, grid_fg_blue = 0.2;
-double grid_thick = 1;
-double point_r = 4;
+#include "proto.h"
 
 double mm_to_pix(double mm) {
-	return mm * PIX_PER_MM;
+	return mm * uni_get("ppm");
 }
 
 void draw_line(cairo_t *cr, double x1, double y1, double x2, double y2) {
@@ -17,8 +13,8 @@ void draw_line(cairo_t *cr, double x1, double y1, double x2, double y2) {
 }
 
 void draw_grid(cairo_t *cr, guint width, guint height, guint step) {
-	cairo_set_source_rgb(cr, grid_fg_red, grid_fg_green, grid_fg_blue);	
-	cairo_set_line_width(cr, grid_thick);
+	cairo_set_source_rgb(cr, uni_get("gfr"), uni_get("gfg"), uni_get("gfb"));	
+	cairo_set_line_width(cr, uni_get("gt"));
 
 	for (int i = 0; i < (height/step); i++) {
 		draw_line(cr, 0, step * i, width, step * i);	
@@ -31,7 +27,7 @@ void draw_grid(cairo_t *cr, guint width, guint height, guint step) {
 }
 
 void draw_point(cairo_t *cr, double x, double y) {
-	cairo_arc (cr, x, y, point_r, 0, 2 * G_PI);
+	cairo_arc (cr, x, y, uni_get("pr"), 0, 2 * G_PI);
 
 	cairo_fill(cr);
 }

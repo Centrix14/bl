@@ -119,8 +119,9 @@ void cust_bttn_click(GtkWidget *bttn, GtkWidget *parent_window) {
 
 	GtkWidget *dialog_box;
 
-	cust_dialog = gtk_dialog_new_with_buttons("Customization", GTK_WINDOW(parent_window), (GtkDialogFlags)NULL, NULL);
+	cust_dialog = gtk_dialog_new_with_buttons("Customization", GTK_WINDOW(parent_window), (GtkDialogFlags)NULL, "ok", GTK_RESPONSE_NONE, NULL);
 	dialog_content = gtk_dialog_get_content_area(GTK_DIALOG(cust_dialog));
+	g_signal_connect_swapped(cust_dialog, "response", G_CALLBACK(gtk_widget_destroy), cust_dialog);
 
 	// init ppm row
 	ppm_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);

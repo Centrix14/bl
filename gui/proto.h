@@ -5,6 +5,9 @@
 
 #define SIZE 32
 
+#define DEFAULT_PPM "5"
+#define DEFAULT_SG "1"
+
 void interpret(char*, cairo_t*);
 
 void reta(char*, cairo_t*),
@@ -18,8 +21,15 @@ void reta(char*, cairo_t*),
 	 circle(char*, cairo_t*);
 
 double uni_get(char*);
-double uni_set(char*, double);
+void uni_set(char*, double);
 
-void ppm_apply_click(GtkWidget *bttn, GtkWidget *entry);
+void ppm_apply_click(GtkWidget*, GtkWidget*),
+	 sg_apply_click(GtkWidget*, GtkWidget*),
+	 fc_apply_click(GtkWidget*, GtkWidget*),
+	 bc_apply_click(GtkWidget*, GtkWidget*),
+	 gc_apply_click(GtkWidget*, GtkWidget*),
+	 lw_apply_click(GtkWidget*, GtkWidget*),
+	 gw_apply_click(GtkWidget*, GtkWidget*),
+	 pr_apply_click(GtkWidget*, GtkWidget*);
 
 #endif

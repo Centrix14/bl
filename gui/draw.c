@@ -58,3 +58,10 @@ void draw_text(cairo_t *cr, const char *text, double x, double y, int size) {
 	cairo_show_text(cr, text);
 	cairo_fill(cr);
 }
+
+void draw_arc(cairo_t *cr, double x, double y, double radii, double angle1, double angle2) {
+	cairo_arc(cr, x, y, radii, angle1, angle2);
+	cairo_stroke(cr);
+
+	draw_point(cr, x, y);
+}

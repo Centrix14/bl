@@ -6,15 +6,15 @@
 #include "proto.h"
 
 void interpret(char *form, cairo_t *cr) {
-	char *funcs_names[] = {"reta", "rect", "point", "line", "brush", "sym", "~", "sleep", "circle"};
-	void (*funcs[])(char*, cairo_t*) = {reta, rect, point, line, set_brush, sym, comment, sleep, circle};
+	char *funcs_names[] = {"reta", "rect", "point", "line", "brush", "sym", "~", "sleep", "circle", "arc"};
+	void (*funcs[])(char*, cairo_t*) = {reta, rect, point, line, set_brush, sym, comment, sleep, circle, arc};
 
 	char *head = strtok(form, ":");	
 	char *tail = strtok(NULL, "/");
 
 	int i = 0;
 
-	for (; i < 9; i++) {
+	for (; i < 10; i++) {
 		if (!strcmp(funcs_names[i], head)){
 			(*funcs[i])(tail, cr);
 			return ;
@@ -79,4 +79,15 @@ void sleep(char *arg, cairo_t *cr) {
 	int sleep_time = atoi(sleep_time_str);
 
 	while ((time(NULL) - start) < sleep_time) ;
+}
+
+void arc(char *arg, cairo_t *cr) {
+	char *coord = strtok(arg, "|");
+	char *radii = strtok(NULL, "|");
+	char *angles = strtok(NULL, "|");
+	
+	double x = atof(strtok(coord, ";")), y = atof(strtok(NULL, ";"));
+	double angle1 = atof(strtok(angles, ";")), angle2 = atof(strtok(NULL, ";"));
+
+	draw_arc(cr, mm_to_pix(x), mm_to_pix(y), mm_to_pix(atof(radii)), angle1 * (G_PI / 180), angle2 * (G_PI / 180));
 }

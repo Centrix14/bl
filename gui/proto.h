@@ -18,7 +18,8 @@ void reta(char*, cairo_t*),
 	 sym(char*, cairo_t*),
 	 comment(char*, cairo_t*),
 	 sleep(char*, cairo_t*),
-	 circle(char*, cairo_t*);
+	 circle(char*, cairo_t*),
+	 arc(char*, cairo_t*);
 
 double uni_get(char*);
 void uni_set(char*, double);

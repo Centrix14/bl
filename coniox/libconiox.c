@@ -66,7 +66,7 @@
 	}
 
 	void mvCursor(int x, int y) {
-		printf("\x1b[%d;%df", y, x);
+		printf("\x1b[%d;%df", y+1, x+1);
 	}
 
 	void cursorUp(int x, int y) {

@@ -17,10 +17,17 @@ int main(int argc, char *argv[]) {
 	GtkWidget *window;	
 	GtkWidget *main_box;
 	GtkWidget *draw_area, *cust_bttn;
+	FILE *src = NULL;
 
 	if (argc != 2) {
-		fprintf(stderr, "gbl: gbl <script-name>\n");
+		fprintf(stderr, "%s: %s <script-name>\n", argv[0], argv[0]);
 		return 0;
+	}
+
+	src = fopen(argv[1], "r");
+	if (!src) {
+		fclose(src);
+		fclose(fopen(argv[1], "w"));
 	}
 
 	gtk_init(&argc, &argv);

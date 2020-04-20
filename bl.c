@@ -162,8 +162,6 @@ void circle(char *arg) {
 	int width = atoi(sizes);
 	double r = width / 2.0;
 
-	mvCursor(x, y);
-
 //	printf("x: %d ; y: %d ; r: %g\n", x, y, r);
 
 	if (width == 1) {
@@ -216,7 +214,7 @@ void circle(char *arg) {
 		}
 		Y = line;
 	
-		mvCursor(x + X + 1, y + Y + 1);
+		mvCursor(x + X, y + Y);
 
 		for (int k = 0; k < width - 2*X; k++)
 			putchar(brush);
@@ -230,7 +228,7 @@ void circle(char *arg) {
 		line--;
 	for (int i = 0; line >= 0; line--, i++) {
 //		printf("line: %d ; %d ; %d ; %d ; %d\n", line, x + point[line] + 1, y + (int)ceil(r) + i + 1, width - 2*point[line], point[line]);
-		mvCursor(x + point[line] + 1, y + ceil(r) + i + 1);
+		mvCursor(x + point[line], y + ceil(r) + i);
 		for (int k = 0; k < width - 2*point[line]; k++)
 			putchar(brush);
 	}

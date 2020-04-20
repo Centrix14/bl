@@ -6,6 +6,9 @@
 int get_brush_c();
 void interpret(char*);
 
+void goCursor(int, int);
+void print(char);
+
 void reta(char*),
 	 rect(char*),
 	 point(char*),

@@ -14,6 +14,7 @@
 #include "proto.h"
 
 int brush = '#';
+int X, Y;
 
 int main(int argc, char *argv[]) {
 	FILE *src = fopen(argv[1], "r");
@@ -68,6 +69,21 @@ void interpret(char *form) {
 		}
 	}
 	if (strlen(head) > 1) puts(head);
+}
+
+void goCursor(int x, int y) {
+	X = x;
+	Y = y;
+	if (x >= 0 && y >= 0)
+		mvCursor(x, y);
+}
+
+void print(char c) {
+	if (X >= 0 && Y >= 0) {
+		goCursor(X, Y);
+		putchar(c);
+	}
+	X++;
 }
 
 void reta(char *arg) {
@@ -165,7 +181,7 @@ void circle(char *arg) {
 //	printf("x: %d ; y: %d ; r: %g\n", x, y, r);
 
 	if (width == 1) {
-		putchar(brush);
+		print(brush);
 		return;
 	}
 	
@@ -214,10 +230,10 @@ void circle(char *arg) {
 		}
 		Y = line;
 	
-		mvCursor(x + X, y + Y);
+		goCursor(x + X, y + Y);
 
 		for (int k = 0; k < width - 2*X; k++)
-			putchar(brush);
+			print(brush);
 		
 		if (line != floor(r)+1)
 			point[line] = X;
@@ -228,8 +244,8 @@ void circle(char *arg) {
 		line--;
 	for (int i = 0; line >= 0; line--, i++) {
 //		printf("line: %d ; %d ; %d ; %d ; %d\n", line, x + point[line] + 1, y + (int)ceil(r) + i + 1, width - 2*point[line], point[line]);
-		mvCursor(x + point[line], y + ceil(r) + i);
+		goCursor(x + point[line], y + ceil(r) + i);
 		for (int k = 0; k < width - 2*point[line]; k++)
-			putchar(brush);
+			print(brush);
 	}
 }

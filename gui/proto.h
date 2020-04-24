@@ -33,4 +33,11 @@ void ppm_apply_click(GtkWidget*, GtkWidget*),
 	 gw_apply_click(GtkWidget*, GtkWidget*),
 	 pr_apply_click(GtkWidget*, GtkWidget*);
 
+void pb_click(GtkWidget*),
+	 lb_click(GtkWidget*),
+	 cb_click(GtkWidget*),
+	 rb_click(GtkWidget*);
+
+void choose_bttns_click(GtkWidget*, GtkWidget*);
+
 #endif

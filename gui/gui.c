@@ -12,11 +12,12 @@
 
 gboolean draw_callback(GtkWidget*, cairo_t*, char*);
 void cust_bttn_click(GtkWidget*, GtkWidget*);
+void dd_bttn_click(GtkWidget*, GtkWidget*);
 
 int main(int argc, char *argv[]) {
 	GtkWidget *window;	
-	GtkWidget *main_box;
-	GtkWidget *draw_area, *cust_bttn;
+	GtkWidget *main_box, *menu_box;
+	GtkWidget *draw_area, *cust_bttn, *dd_bttn;
 	FILE *src = NULL;
 
 	if (argc != 2) {
@@ -52,8 +53,17 @@ int main(int argc, char *argv[]) {
 	cust_bttn = gtk_button_new_with_label("cust");
 	g_signal_connect(G_OBJECT(cust_bttn), "clicked", G_CALLBACK(cust_bttn_click), window);
 
+	// init dynamic_draw bttn
+	dd_bttn = gtk_button_new_with_label("dd");
+	g_signal_connect(G_OBJECT(dd_bttn), "clicked", G_CALLBACK(dd_bttn_click), window);
+	
+	// init and pack menu_box
+	menu_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+	gtk_box_pack_start(GTK_BOX(menu_box), cust_bttn, TRUE, TRUE, 5);
+	gtk_box_pack_start(GTK_BOX(menu_box), dd_bttn, TRUE, TRUE, 5);
+
 	// pack main_box
-	gtk_box_pack_start(GTK_BOX(main_box), cust_bttn, FALSE, FALSE, 5);
+	gtk_box_pack_start(GTK_BOX(main_box), menu_box, FALSE, FALSE, 5);
 	gtk_box_pack_start(GTK_BOX(main_box), draw_area, TRUE, TRUE, 0);
 
 	gtk_container_add(GTK_CONTAINER(window), main_box);
@@ -126,7 +136,7 @@ void cust_bttn_click(GtkWidget *bttn, GtkWidget *parent_window) {
 
 	GtkWidget *dialog_box;
 
-	cust_dialog = gtk_dialog_new_with_buttons("Customization", GTK_WINDOW(parent_window), (GtkDialogFlags)NULL, "ok", GTK_RESPONSE_NONE, NULL);
+	cust_dialog = gtk_dialog_new_with_buttons("customization", GTK_WINDOW(parent_window), (GtkDialogFlags)NULL, NULL, GTK_RESPONSE_NONE, NULL);
 	dialog_content = gtk_dialog_get_content_area(GTK_DIALOG(cust_dialog));
 	g_signal_connect_swapped(cust_dialog, "response", G_CALLBACK(gtk_widget_destroy), cust_dialog);
 
@@ -249,4 +259,44 @@ void cust_bttn_click(GtkWidget *bttn, GtkWidget *parent_window) {
 
 	gtk_container_add(GTK_CONTAINER(dialog_content), dialog_box);
 	gtk_widget_show_all(cust_dialog);
+}
+
+void dd_bttn_click(GtkWidget *bttn, GtkWidget *parent_window) {
+	GtkWidget *dd_dialog, *dialog_content;
+
+	GtkWidget *dialog_box;
+	GtkWidget *change_row;
+
+	GtkWidget *change_label, *change_rect_bttn, *change_line_bttn, *change_point_bttn, *change_circle_bttn;
+
+	dd_dialog = gtk_dialog_new_with_buttons("dynamic draw", GTK_WINDOW(parent_window), (GtkDialogFlags)NULL, NULL, GTK_RESPONSE_NONE, NULL);
+	dialog_content = gtk_dialog_get_content_area(GTK_DIALOG(dd_dialog));
+	g_signal_connect_swapped(dd_dialog, "response", G_CALLBACK(gtk_widget_destroy), dd_dialog);
+
+	// init change_row elements
+	change_label = gtk_label_new("Select a primitive");
+	change_point_bttn = gtk_button_new_with_label("point");
+	change_line_bttn = gtk_button_new_with_label("line");
+	change_circle_bttn = gtk_button_new_with_label("circle");
+	change_rect_bttn = gtk_button_new_with_label("rectangle");
+
+	// pack change_row
+	change_row = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
+	gtk_box_pack_start(GTK_BOX(change_row), change_label, FALSE, FALSE, 5);
+	gtk_box_pack_start(GTK_BOX(change_row), change_point_bttn, TRUE, TRUE, 5);
+	gtk_box_pack_start(GTK_BOX(change_row), change_line_bttn, TRUE, TRUE, 5);
+	gtk_box_pack_start(GTK_BOX(change_row), change_circle_bttn, TRUE, TRUE, 5);
+	gtk_box_pack_start(GTK_BOX(change_row), change_rect_bttn, TRUE, TRUE, 5);
+
+	// pack dialog box
+	dialog_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
+	gtk_box_pack_start(GTK_BOX(dialog_box), change_row, TRUE, FALSE, 5);
+
+	g_signal_connect(G_OBJECT(change_point_bttn), "clicked", G_CALLBACK(choose_bttns_click), dd_dialog);
+	g_signal_connect(G_OBJECT(change_line_bttn), "clicked", G_CALLBACK(choose_bttns_click), dd_dialog);
+	g_signal_connect(G_OBJECT(change_circle_bttn), "clicked", G_CALLBACK(choose_bttns_click), dd_dialog);
+	g_signal_connect(G_OBJECT(change_rect_bttn), "clicked", G_CALLBACK(choose_bttns_click), dd_dialog);
+
+	gtk_container_add(GTK_CONTAINER(dialog_content), dialog_box);
+	gtk_widget_show_all(dd_dialog);
 }

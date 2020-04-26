@@ -30,6 +30,7 @@ int main(int argc, char *argv[]) {
 		fclose(src);
 		fclose(fopen(argv[1], "w"));
 	}
+	set_fname(argv[1]);
 
 	gtk_init(&argc, &argv);
 
@@ -87,6 +88,8 @@ gboolean draw_callback(GtkWidget *widget, cairo_t *cr, char *file_name) {
 	width = gtk_widget_get_allocated_width(widget);
 	height = gtk_widget_get_allocated_height(widget);
 
+	cairo_translate(cr, 0, height);
+	cairo_rotate(cr, grades_to_rad(-90));
 	cairo_set_source_rgb(cr, uni_get("br"), uni_get("bg"), uni_get("bb"));
 	cairo_paint(cr);
 
@@ -267,7 +270,7 @@ void dd_bttn_click(GtkWidget *bttn, GtkWidget *parent_window) {
 	GtkWidget *dialog_box;
 	GtkWidget *change_row;
 
-	GtkWidget *change_label, *change_rect_bttn, *change_line_bttn, *change_point_bttn, *change_circle_bttn;
+	GtkWidget *change_label, *change_rect_bttn, *change_line_bttn, *change_point_bttn, *change_circle_bttn, *change_arc_bttn;
 
 	dd_dialog = gtk_dialog_new_with_buttons("dynamic draw", GTK_WINDOW(parent_window), (GtkDialogFlags)NULL, NULL, GTK_RESPONSE_NONE, NULL);
 	dialog_content = gtk_dialog_get_content_area(GTK_DIALOG(dd_dialog));
@@ -279,6 +282,7 @@ void dd_bttn_click(GtkWidget *bttn, GtkWidget *parent_window) {
 	change_line_bttn = gtk_button_new_with_label("line");
 	change_circle_bttn = gtk_button_new_with_label("circle");
 	change_rect_bttn = gtk_button_new_with_label("rectangle");
+	change_arc_bttn = gtk_button_new_with_label("arc");
 
 	// pack change_row
 	change_row = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
@@ -287,6 +291,7 @@ void dd_bttn_click(GtkWidget *bttn, GtkWidget *parent_window) {
 	gtk_box_pack_start(GTK_BOX(change_row), change_line_bttn, TRUE, TRUE, 5);
 	gtk_box_pack_start(GTK_BOX(change_row), change_circle_bttn, TRUE, TRUE, 5);
 	gtk_box_pack_start(GTK_BOX(change_row), change_rect_bttn, TRUE, TRUE, 5);
+	gtk_box_pack_start(GTK_BOX(change_row), change_arc_bttn, TRUE, TRUE, 5);
 
 	// pack dialog box
 	dialog_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
@@ -296,6 +301,7 @@ void dd_bttn_click(GtkWidget *bttn, GtkWidget *parent_window) {
 	g_signal_connect(G_OBJECT(change_line_bttn), "clicked", G_CALLBACK(choose_bttns_click), dd_dialog);
 	g_signal_connect(G_OBJECT(change_circle_bttn), "clicked", G_CALLBACK(choose_bttns_click), dd_dialog);
 	g_signal_connect(G_OBJECT(change_rect_bttn), "clicked", G_CALLBACK(choose_bttns_click), dd_dialog);
+	g_signal_connect(G_OBJECT(change_arc_bttn), "clicked", G_CALLBACK(choose_bttns_click), dd_dialog);
 
 	gtk_container_add(GTK_CONTAINER(dialog_content), dialog_box);
 	gtk_widget_show_all(dd_dialog);

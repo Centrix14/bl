@@ -42,7 +42,7 @@ void rect(char *arg, cairo_t *cr) {
 }
 
 void point(char *arg, cairo_t *cr) {
-	int x = atoi(strtok(arg, ";")), y = atoi(strtok(arg, ";"));
+	int x = atoi(strtok(arg, ";")), y = atoi(strtok(NULL, ";"));
 
 	draw_point(cr, mm_to_pix(x), mm_to_pix(y));
 }

@@ -1,7 +1,7 @@
 /*
  * gbl -- graphical bl interpreter
- * v0.4
- * 15.04.2020
+ * v0.8
+ * 26.04.2020
  * Nifra -- ASZ
  */
 

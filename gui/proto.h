@@ -5,9 +5,6 @@
 
 #define SIZE 32
 
-#define DEFAULT_PPM "5"
-#define DEFAULT_SG "1"
-
 void interpret(char*, cairo_t*);
 
 void reta(char*, cairo_t*),
@@ -36,8 +33,25 @@ void ppm_apply_click(GtkWidget*, GtkWidget*),
 void pb_click(GtkWidget*),
 	 lb_click(GtkWidget*),
 	 cb_click(GtkWidget*),
-	 rb_click(GtkWidget*);
+	 rb_click(GtkWidget*),
+	 ab_click(GtkWidget*);
 
 void choose_bttns_click(GtkWidget*, GtkWidget*);
+char *get_coord(),
+	 *get_first(),
+	 *get_second();
+
+void set_fname(char*);
+char *get_fname();
+
+void add_point(GtkWidget*, char*),
+	 add_line(GtkWidget*, char*),
+	 add_circle(GtkWidget*, char*),
+	 add_rect(GtkWidget*, char*),
+	 add_arc(GtkWidget*, char*);
+
+int is_empty(char *str);
+
+double grades_to_rad(double grad);
 
 #endif

@@ -6,8 +6,8 @@ double mm_to_pix(double mm) {
 }
 
 void draw_line(cairo_t *cr, double x1, double y1, double x2, double y2) {
-	cairo_move_to(cr, x1, y1);
-	cairo_line_to(cr, x2, y2);
+	cairo_move_to(cr, y1, x1);
+	cairo_line_to(cr, y2, x2);
 
 	cairo_stroke(cr);
 }
@@ -27,20 +27,20 @@ void draw_grid(cairo_t *cr, guint width, guint height, guint step) {
 }
 
 void draw_point(cairo_t *cr, double x, double y) {
-	cairo_arc (cr, x, y, uni_get("pr"), 0, 2 * G_PI);
+	cairo_arc(cr, y, x, uni_get("pr"), 0, 2 * G_PI);
 
 	cairo_fill(cr);
 }
 
 void draw_circle(cairo_t *cr, double x, double y, double radii) {
-	cairo_arc(cr, x, y, radii, 0, 2 * G_PI);
+	cairo_arc(cr, y, x, radii, 0, 2 * G_PI);
 	cairo_stroke(cr);
 
 	draw_point(cr, x, y);
 }
 
 void draw_rect(cairo_t *cr, double x, double y, double width, double height) {
-	cairo_rectangle(cr, x, y, width, height);
+	cairo_rectangle(cr, y, x, width, height);
 
 	cairo_stroke(cr);
 }
@@ -53,15 +53,15 @@ void draw_text(cairo_t *cr, const char *text, double x, double y, int size) {
 	cairo_set_font_size(cr, size);
 
 	cairo_text_extents(cr, text, &te);
-	cairo_move_to(cr, x, y);
+	cairo_move_to(cr, y, x);
 
 	cairo_show_text(cr, text);
 	cairo_fill(cr);
 }
 
 void draw_arc(cairo_t *cr, double x, double y, double radii, double angle1, double angle2) {
-	cairo_arc(cr, x, y, radii, angle1, angle2);
+	cairo_arc(cr, y, x, radii, angle1, angle2);
 	cairo_stroke(cr);
 
-	draw_point(cr, x, y);
+	draw_point(cr, y, x);
 }

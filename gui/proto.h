@@ -4,6 +4,7 @@
 #include <gtk/gtk.h>
 
 #define SIZE 32
+#define HELP_FILE "help.txt"
 
 void interpret(char*, cairo_t*);
 
@@ -53,5 +54,11 @@ void add_point(GtkWidget*, char*),
 int is_empty(char *str);
 
 double grades_to_rad(double grad);
+
+void create(char*);
+void destroy();
+char *read_and_fill(char*);
+
+void add_to_file_bttn_click(GtkWidget *bttn, GtkWidget *entry);
 
 #endif

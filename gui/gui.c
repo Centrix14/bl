@@ -11,13 +11,15 @@
 #include "draw.h"
 
 gboolean draw_callback(GtkWidget*, cairo_t*, char*);
-void cust_bttn_click(GtkWidget*, GtkWidget*);
-void dd_bttn_click(GtkWidget*, GtkWidget*);
+void cust_bttn_click(GtkWidget*, GtkWidget*),
+	 dd_bttn_click(GtkWidget*, GtkWidget*),
+	 cv_bttn_click(GtkWidget*, GtkWidget*),
+	 help_bttn_click(GtkWidget*, GtkWidget*);
 
 int main(int argc, char *argv[]) {
 	GtkWidget *window;	
 	GtkWidget *main_box, *menu_box;
-	GtkWidget *draw_area, *cust_bttn, *dd_bttn;
+	GtkWidget *draw_area, *cust_bttn, *dd_bttn, *cv_bttn, *help_bttn;
 	FILE *src = NULL;
 
 	if (argc != 2) {
@@ -57,11 +59,21 @@ int main(int argc, char *argv[]) {
 	// init dynamic_draw bttn
 	dd_bttn = gtk_button_new_with_label("dd");
 	g_signal_connect(G_OBJECT(dd_bttn), "clicked", G_CALLBACK(dd_bttn_click), window);
+
+	// init code_view bttn
+	cv_bttn = gtk_button_new_with_label("cv");
+	g_signal_connect(G_OBJECT(cv_bttn), "clicked", G_CALLBACK(cv_bttn_click), window);
+	
+	// init help bttn
+	help_bttn = gtk_button_new_with_label("help");
+	g_signal_connect(G_OBJECT(help_bttn), "clicked", G_CALLBACK(help_bttn_click), window);
 	
 	// init and pack menu_box
 	menu_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start(GTK_BOX(menu_box), cust_bttn, TRUE, TRUE, 5);
 	gtk_box_pack_start(GTK_BOX(menu_box), dd_bttn, TRUE, TRUE, 5);
+	gtk_box_pack_start(GTK_BOX(menu_box), cv_bttn, TRUE, TRUE, 5);
+	gtk_box_pack_start(GTK_BOX(menu_box), help_bttn, TRUE, TRUE, 5);
 
 	// pack main_box
 	gtk_box_pack_start(GTK_BOX(main_box), menu_box, FALSE, FALSE, 5);
@@ -305,4 +317,74 @@ void dd_bttn_click(GtkWidget *bttn, GtkWidget *parent_window) {
 
 	gtk_container_add(GTK_CONTAINER(dialog_content), dialog_box);
 	gtk_widget_show_all(dd_dialog);
+}
+
+void cv_bttn_click(GtkWidget *bttn, GtkWidget *parent_window) {
+	GtkWidget *cv_dialog, *dialog_content;
+	GtkWidget *dialog_box, *add_box;
+
+	GtkWidget *main_label, *help_label, *addition_entry, *add_bttn;
+
+	cv_dialog = gtk_dialog_new_with_buttons("code viewer", GTK_WINDOW(parent_window), (GtkDialogFlags)NULL, NULL, GTK_RESPONSE_NONE, NULL);
+	dialog_content = gtk_dialog_get_content_area(GTK_DIALOG(cv_dialog));
+	g_signal_connect_swapped(cv_dialog, "response", G_CALLBACK(gtk_widget_destroy), cv_dialog);
+
+	// init elements for add_box
+	add_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
+	help_label = gtk_label_new("Add to the end of the file");
+	addition_entry = gtk_entry_new();
+	add_bttn = gtk_button_new_with_label("+");
+
+	// pack	init_box
+	gtk_box_pack_start(GTK_BOX(add_box), help_label, TRUE, FALSE, 5);
+	gtk_box_pack_start(GTK_BOX(add_box), addition_entry, TRUE, FALSE, 5);
+	gtk_box_pack_start(GTK_BOX(add_box), add_bttn, TRUE, FALSE, 5);
+
+	// init & pack dialog_box
+	dialog_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
+	main_label = gtk_label_new("");
+
+	gtk_box_pack_start(GTK_BOX(dialog_box), main_label, TRUE, FALSE, 5);
+	gtk_box_pack_start(GTK_BOX(dialog_box), add_box, TRUE, FALSE, 5);
+
+	// make main_label selectable
+	gtk_label_set_selectable(GTK_LABEL(main_label), TRUE);
+
+	// read file
+	create(get_fname());
+	gtk_label_set_text(GTK_LABEL(main_label), read_and_fill(get_fname()));
+	destroy();
+
+	// binding the function to the button
+	g_signal_connect(G_OBJECT(add_bttn), "clicked", G_CALLBACK(add_to_file_bttn_click), addition_entry);
+
+	gtk_container_add(GTK_CONTAINER(dialog_content), dialog_box);
+	gtk_widget_show_all(cv_dialog);
+}
+
+void help_bttn_click(GtkWidget *bttn, GtkWidget *parent_window) {
+	GtkWidget *help_dialog, *dialog_content;	
+	GtkWidget *dialog_box;
+
+	GtkWidget *help_label;
+
+	help_dialog = gtk_dialog_new_with_buttons("help", GTK_WINDOW(parent_window), (GtkDialogFlags)NULL, NULL, GTK_RESPONSE_NONE, NULL);
+	dialog_content = gtk_dialog_get_content_area(GTK_DIALOG(help_dialog));
+	g_signal_connect_swapped(help_dialog, "response", G_CALLBACK(gtk_widget_destroy), help_dialog);	
+
+	// init & pack
+	dialog_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
+	help_label = gtk_label_new("");
+	gtk_box_pack_start(GTK_BOX(dialog_box), help_label, TRUE, TRUE, 5);
+
+	// make main_label selectable
+	gtk_label_set_selectable(GTK_LABEL(help_label), TRUE);
+
+	// read help file
+	create(HELP_FILE);
+	gtk_label_set_text(GTK_LABEL(help_label), read_and_fill(HELP_FILE));
+	destroy();
+
+	gtk_container_add(GTK_CONTAINER(dialog_content), dialog_box);
+	gtk_widget_show_all(help_dialog);
 }

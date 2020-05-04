@@ -107,7 +107,7 @@ gboolean draw_callback(GtkWidget *widget, cairo_t *cr, char *file_name) {
 
 	// drawing grid
 	if (uni_get("sg"))
-		draw_grid(cr, width, height, mm_to_pix(5));
+		draw_grid(cr, width, height, mm_to_pix(uni_get("gs")));
 	
 	cairo_set_source_rgb(cr, uni_get("fr"), uni_get("fg"), uni_get("fb"));
 	cairo_set_line_width(cr, uni_get("th"));
@@ -147,6 +147,7 @@ void cust_bttn_click(GtkWidget *bttn, GtkWidget *parent_window) {
 	GtkWidget *lw_label, *lw_entry, *lw_apply_bttn, *lw_box;
 	GtkWidget *gw_label, *gw_entry, *gw_apply_bttn, *gw_box;
 	GtkWidget *pr_label, *pr_entry, *pr_apply_bttn, *pr_box;
+	GtkWidget *gs_label, *gs_entry, *gs_apply_bttn, *gs_box;
 	GtkWidget *hor_sep1, *hor_sep2;
 
 	GtkWidget *dialog_box;
@@ -159,57 +160,64 @@ void cust_bttn_click(GtkWidget *bttn, GtkWidget *parent_window) {
 	ppm_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
 	ppm_entry = gtk_entry_new();
 	ppm_apply_bttn = gtk_button_new_with_label("apply");
-	ppm_label = gtk_label_new("ppm");
+	ppm_label = gtk_label_new("ppm [int]");
 	g_signal_connect(G_OBJECT(ppm_apply_bttn), "clicked", G_CALLBACK(ppm_apply_click), ppm_entry);
 
 	// init sg row
 	sg_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
-	sg_label = gtk_label_new("show grid");
+	sg_label = gtk_label_new("show grid [0 - false, another - true]");
 	sg_entry = gtk_entry_new();
 	sg_apply_bttn = gtk_button_new_with_label("apply");
 	g_signal_connect(G_OBJECT(sg_apply_bttn), "clicked", G_CALLBACK(sg_apply_click), sg_entry);
 
 	// init fc row
 	fc_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
-	fc_label = gtk_label_new("foreground color");
+	fc_label = gtk_label_new("foreground color [r/g/b <= 1, r g b]");
 	fc_entry = gtk_entry_new();
 	fc_apply_bttn = gtk_button_new_with_label("apply");
 	g_signal_connect(G_OBJECT(fc_apply_bttn), "clicked", G_CALLBACK(fc_apply_click), fc_entry);
 
 	// init bc row
 	bc_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
-	bc_label = gtk_label_new("background color");
+	bc_label = gtk_label_new("background color [r/g/b <= 1 r g b]");
 	bc_entry = gtk_entry_new();
 	bc_apply_bttn = gtk_button_new_with_label("apply");
 	g_signal_connect(G_OBJECT(bc_apply_bttn), "clicked", G_CALLBACK(bc_apply_click), bc_entry);
 
 	// init gc row
 	gc_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
-	gc_label = gtk_label_new("grid color");
+	gc_label = gtk_label_new("grid color [r/g/b <= 1 r g b]");
 	gc_entry = gtk_entry_new();
 	gc_apply_bttn = gtk_button_new_with_label("apply");
 	g_signal_connect(G_OBJECT(gc_apply_bttn), "clicked", G_CALLBACK(gc_apply_click), gc_entry);
 
 	// init lw row
 	lw_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
-	lw_label = gtk_label_new("line width");
+	lw_label = gtk_label_new("line width [px]");
 	lw_entry = gtk_entry_new();
 	lw_apply_bttn = gtk_button_new_with_label("apply");
 	g_signal_connect(G_OBJECT(lw_apply_bttn), "clicked", G_CALLBACK(lw_apply_click), lw_entry);
 
 	// init gw row
 	gw_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
-	gw_label = gtk_label_new("grid line width");
+	gw_label = gtk_label_new("grid line width [px]");
 	gw_entry = gtk_entry_new();
 	gw_apply_bttn = gtk_button_new_with_label("apply");
 	g_signal_connect(G_OBJECT(gw_apply_bttn), "clicked", G_CALLBACK(gw_apply_click), gw_entry);
 
 	// init pr row
 	pr_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
-	pr_label = gtk_label_new("point radius");
+	pr_label = gtk_label_new("point radius [px]");
 	pr_entry = gtk_entry_new();
 	pr_apply_bttn = gtk_button_new_with_label("apply");
 	g_signal_connect(G_OBJECT(pr_apply_bttn), "clicked", G_CALLBACK(pr_apply_click), pr_entry);
+
+	// init gs row
+	gs_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
+	gs_label = gtk_label_new("grid step [mm]");
+	gs_entry = gtk_entry_new();
+	gs_apply_bttn = gtk_button_new_with_label("apply");
+	g_signal_connect(G_OBJECT(gs_apply_bttn), "clicked", G_CALLBACK(gs_apply_click), gs_entry);
 
 	// pack ppm row
 	gtk_box_pack_start(GTK_BOX(ppm_box), ppm_label, TRUE, TRUE, 5);
@@ -251,6 +259,11 @@ void cust_bttn_click(GtkWidget *bttn, GtkWidget *parent_window) {
 	gtk_box_pack_start(GTK_BOX(pr_box), pr_entry, TRUE, TRUE, 5);
 	gtk_box_pack_start(GTK_BOX(pr_box), pr_apply_bttn, FALSE, FALSE, 5);
 
+	// pack gs row
+	gtk_box_pack_start(GTK_BOX(gs_box), gs_label, TRUE, TRUE, 5);
+	gtk_box_pack_start(GTK_BOX(gs_box), gs_entry, TRUE, TRUE, 5);
+	gtk_box_pack_start(GTK_BOX(gs_box), gs_apply_bttn, FALSE, FALSE, 5);
+
 	// pack dialog box
 	dialog_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
 
@@ -260,6 +273,7 @@ void cust_bttn_click(GtkWidget *bttn, GtkWidget *parent_window) {
 	gtk_box_pack_start(GTK_BOX(dialog_box), fc_box, TRUE, FALSE, 5);
 	gtk_box_pack_start(GTK_BOX(dialog_box), bc_box, TRUE, FALSE, 5);
 	gtk_box_pack_start(GTK_BOX(dialog_box), gc_box, TRUE, FALSE, 5);
+	gtk_box_pack_start(GTK_BOX(dialog_box), gs_box, TRUE, FALSE, 5);
 
 	gtk_box_pack_start(GTK_BOX(dialog_box), hor_sep1, TRUE, TRUE, 5);
 

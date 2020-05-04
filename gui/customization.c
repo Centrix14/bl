@@ -79,3 +79,10 @@ void pr_apply_click(GtkWidget *bttn, GtkWidget *entry) {
 	if (new_radius > 0)
 		uni_set("pr", new_radius);	
 }
+
+void gs_apply_click(GtkWidget *bttn, GtkWidget *entry) {
+	double new_grid_step = atof(gtk_entry_get_text(GTK_ENTRY(entry)));
+
+	if (new_grid_step > 0)
+		uni_set("gs", new_grid_step);	
+}

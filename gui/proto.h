@@ -29,7 +29,8 @@ void ppm_apply_click(GtkWidget*, GtkWidget*),
 	 gc_apply_click(GtkWidget*, GtkWidget*),
 	 lw_apply_click(GtkWidget*, GtkWidget*),
 	 gw_apply_click(GtkWidget*, GtkWidget*),
-	 pr_apply_click(GtkWidget*, GtkWidget*);
+	 pr_apply_click(GtkWidget*, GtkWidget*),
+	 gs_apply_click(GtkWidget*, GtkWidget*);
 
 void pb_click(GtkWidget*),
 	 lb_click(GtkWidget*),
